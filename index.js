@@ -25,13 +25,44 @@ const topMovies = [
     { title: "La La Land", year: 2016 },
 ];
 
+app.get('/', (req, res) => {
+    res.send('Welcome to the Movie API!');
+});
 
 app.get('/movies', (req, res) => {
     res.json(topMovies);
 });
 
-app.get('/', (req, res) => {
-    res.send('Welcome to the Movie API!');
+app.get('/movies/:name', (req, res) => {
+    res.send(`Successfully fetched data for the movie: ${req.params.name}.`);
+});
+
+app.get('/genres/:name', (req, res) => {
+    res.send(`Successfully fetched movies in the genre: ${req.params.name}.`);
+});
+
+app.get('/directors/:name', (req, res) => {
+    res.send(`Successfully fetched details about the director: ${req.params.name}.`);
+});
+
+app.post('/users/register', (req, res) => {
+    res.send('User registration was successful.');
+});
+
+app.put('/users/:username', (req, res) => {
+    res.send(`Successfully updated the username for user: ${req.params.username}.`);
+});
+
+app.post('/users/:username/favorites', (req, res) => {
+    res.send(`Successfully added a movie to ${req.params.username}'s list of favorites.`);
+});
+
+app.delete('/users/:username/favorites/:movieTitle', (req, res) => {
+    res.send(`Successfully removed ${req.params.movieTitle} from ${req.params.username}'s list of favorites.`);
+});
+
+app.delete('/users/:username', (req, res) => {
+    res.send(`Successfully deregistered user: ${req.params.username}.`);
 });
 
 app.use((err, req, res, next) => {

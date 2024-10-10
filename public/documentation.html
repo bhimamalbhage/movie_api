@@ -3,11 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie API</title>
+    <title>Movie API Documentation</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
     </style>
 </head>
 <body>
+
     <h1>Movie API Documentation</h1>
+
+    <p>Welcome to the Movie API! This API provides endpoints for managing movies, users, and favorite movies.</p>
+
+    <h2>Endpoints</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Request</th>
+                <th>URL</th>
+                <th>Response</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>GET</td>
+                <td><code>/movies</code></td>
+                <td>Returns a list of the top 10 movies with their titles and release years.</td>
+                <td>Returns a JSON array containing the top 10 movies, each with the title and year of release.</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/movies/:name</code></td>
+                <td>Returns detailed information about a movie by title.</td>
+                <td>Returns a JSON object containing details about a specific movie, including title, description, genre, director, image URL, and whether it's featured.</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/genres/:name</code></td>
+                <td>Returns a list of movies in a specific genre.</td>
+                <td>Returns a JSON array of movies that belong to the specified genre. Replace <code>:name</code> with the genre name.</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/directors/:name</code></td>
+                <td>Returns details about a specific director.</td>
+                <td>Returns a JSON object containing details about the director, such as name, birthdate, and filmography. Replace <code>:name</code> with the director’s name.</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td><code>/users/register</code></td>
+                <td>Registers a new user in the system.</td>
+                <td>Accepts a JSON object in the request body to register a new user, including fields like username, password, and email.</td>
+            </tr>
+            <tr>
+                <td>PUT</td>
+                <td><code>/users/:username</code></td>
+                <td>Updates the username of an existing user.</td>
+                <td>Allows updating a user's username. Replace <code>:username</code> with the current username and include the new username in the request body.</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td><code>/users/:username/favorites</code></td>
+                <td>Adds a movie to the user's list of favorite movies.</td>
+                <td>Allows adding a movie to a user's favorite list. Replace <code>:username</code> with the user's name and include the movie details in the request body.</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td><code>/users/:username/favorites/:movieTitle</code></td>
+                <td>Removes a movie from the user's list of favorite movies.</td>
+                <td>Removes a movie from the user's favorite list. Replace <code>:username</code> with the user's name and <code>:movieTitle</code> with the title of the movie to be removed.</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td><code>/users/:username</code></td>
+                <td>Deregisters an existing user from the system.</td>
+                <td>Deletes a user account. Replace <code>:username</code> with the user's name to deregister.</td>
+            </tr>
+        </tbody>
+    </table>
+
 </body>
 </html>

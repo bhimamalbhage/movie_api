@@ -6,3 +6,23 @@
 2024-10-07T00:27:56.584Z - /favicon.ico
 ::1 - - [09/Oct/2024:07:43:55 +0000] "GET / HTTP/1.1" 304 -
 ::1 - - [09/Oct/2024:07:44:00 +0000] "GET /movies HTTP/1.1" 304 -
+::1 - - [10/Oct/2024:04:30:30 +0000] "GET / HTTP/1.1" 304 -
+::1 - - [10/Oct/2024:04:30:30 +0000] "GET /favicon.ico HTTP/1.1" 404 150
+::1 - - [10/Oct/2024:04:31:58 +0000] "GET / HTTP/1.1" 200 25
+::1 - - [10/Oct/2024:04:32:18 +0000] "GET /movies HTTP/1.1" 200 379
+::1 - - [10/Oct/2024:04:32:52 +0000] "GET /movies/name HTTP/1.1" 200 46
+::1 - - [10/Oct/2024:04:32:58 +0000] "GET /movies/ HTTP/1.1" 200 379
+::1 - - [10/Oct/2024:04:33:03 +0000] "GET /movies/Coco HTTP/1.1" 200 46
+::1 - - [10/Oct/2024:04:33:16 +0000] "GET /genres/Coco HTTP/1.1" 200 47
+::1 - - [10/Oct/2024:04:33:22 +0000] "GET /genres/Thriller HTTP/1.1" 200 51
+::1 - - [10/Oct/2024:04:33:44 +0000] "GET /directors/Nolan HTTP/1.1" 200 55
+::1 - - [10/Oct/2024:04:33:58 +0000] "GET /users/register HTTP/1.1" 404 153
+::1 - - [10/Oct/2024:04:34:20 +0000] "GET /users/ HTTP/1.1" 404 145
+::1 - - [10/Oct/2024:04:34:24 +0000] "GET /users/register HTTP/1.1" 404 153
+::1 - - [10/Oct/2024:04:35:01 +0000] "POST /users/register HTTP/1.1" 200 33
+::1 - - [10/Oct/2024:04:35:23 +0000] "POST /users/register HTTP/1.1" 200 33
+::1 - - [10/Oct/2024:04:35:46 +0000] "PUT /users/jack HTTP/1.1" 200 49
+::1 - - [10/Oct/2024:04:36:02 +0000] "POST /users/jack/favourites HTTP/1.1" 404 161
+::1 - - [10/Oct/2024:04:36:08 +0000] "POST /users/jack/favorites HTTP/1.1" 200 55
+::1 - - [10/Oct/2024:04:36:34 +0000] "DELETE /users/jack/favorites/Coco HTTP/1.1" 200 56
+::1 - - [10/Oct/2024:04:36:44 +0000] "DELETE /users/jack HTTP/1.1" 200 37
