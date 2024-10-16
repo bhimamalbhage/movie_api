@@ -43,3 +43,4 @@
 ::1 - - [15/Oct/2024:07:41:32 +0000] "POST /users/Joe/favorites/1 HTTP/1.1" 200 62
 ::1 - - [15/Oct/2024:07:41:41 +0000] "DELETE /users/Joe/favorites/1 HTTP/1.1" 200 66
 ::1 - - [15/Oct/2024:07:41:48 +0000] "DELETE /users/Joe HTTP/1.1" 200 36
+::1 - - [16/Oct/2024:06:10:03 +0000] "GET /genres/Crime HTTP/1.1" 200 52

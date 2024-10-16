@@ -38,16 +38,7 @@ app.get('/movies/:name', (req, res) => {
 });
 
 app.get('/genres/:name', (req, res) => {
-    const genreInfo = topMovies.find(movie => movie.genre.toLowerCase() === req.params.name.toLowerCase());
-    if (genreInfo) {
-        res.json({
-            title: genreInfo.title,
-            genre: genreInfo.genre,
-            description: genreInfo.description
-        });
-    } else {
-        res.status(404).send('Genre not found');
-    }
+    res.send(`Successfully fetched details about the genre: ${req.params.name}.`);
 });
 
 app.get('/directors/:name', (req, res) => {
