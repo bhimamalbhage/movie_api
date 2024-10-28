@@ -1,78 +1,149 @@
-const express = require('express');
-const morgan = require('morgan');
-const fs = require('fs');
-const path = require('path');
+const express = require("express");
+const morgan = require("morgan");
+const fs = require("fs");
+const path = require("path");
 const app = express();
+const mongoose = require("mongoose");
+const { Movie, User } = require("./models");
 
 // app.use(morgan('common'));
 
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' });
-
-app.use(morgan('common', { stream: accessLogStream }));
-
-app.use(express.static('public'));
-
-const topMovies = [
-    { title: "The Silence of the Lambs", year: 1991, genre: "Thriller", description: "Psychological thriller" },
-    { title: "The Prestige", year: 2006, genre: "Drama", description: "Drama with a focus on magic and illusion" },
-    { title: "The Godfather", year: 1972, genre: "Crime", description: "Crime and mafia underworld" },
-    { title: "The Grand Budapest Hotel", year: 2014, genre: "Comedy", description: "Witty comedy with vibrant visuals" },
-    { title: "Coco", year: 2017, genre: "Animation", description: "Animated story about family and heritage" },
-    { title: "The Departed", year: 2006, genre: "Crime", description: "Crime drama with undercover agents" },
-    { title: "Fight Club", year: 1999, genre: "Drama", description: "Cult classic exploring modern masculinity" },
-    { title: "12 Years a Slave", year: 2013, genre: "Biography", description: "Historical biography about slavery" },
-    { title: "Her", year: 2013, genre: "Romance", description: "Romantic sci-fi about AI and love" },
-    { title: "La La Land", year: 2016, genre: "Musical", description: "Musical about love and dreams in LA" },
-];
-
-app.get('/', (req, res) => {
-    res.send('Welcome to the Movie API!');
+const accessLogStream = fs.createWriteStream(path.join(__dirname, "log.txt"), {
+  flags: "a",
 });
 
-app.get('/movies', (req, res) => {
-    res.json(topMovies);
+app.use(morgan("common", { stream: accessLogStream }));
+
+app.use(express.static("public"));
+
+app.use(express.json());
+
+mongoose
+  .connect("mongodb://localhost:27017/movieDB", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Database connected");
+  })
+  .catch((err) => {
+    console.error("Database connection error:", err);
+  });
+
+app.get("/", (req, res) => {
+  res.send("Welcome to the Movie API!");
 });
 
-app.get('/movies/:name', (req, res) => {
-    res.send(`Successfully fetched data for the movie: ${req.params.name}.`);
+app.get("/movies", async (req, res) => {
+  try {
+    const movies = await Movie.find();
+    res.json(movies);
+  } catch (err) {
+    res.status(500).send("Error retrieving movies");
+  }
 });
 
-app.get('/genres/:name', (req, res) => {
-    res.send(`Successfully fetched details about the genre: ${req.params.name}.`);
+app.get("/movies/:name", async (req, res) => {
+  try {
+    const movie = await Movie.findOne({ title: req.params.name });
+    if (!movie) return res.status(404).send("Movie not found");
+    res.json(movie);
+  } catch (err) {
+    res.status(500).send("Error retrieving movie");
+  }
 });
 
-app.get('/directors/:name', (req, res) => {
-    res.send(`Successfully fetched details about the director: ${req.params.name}.`);
+app.get("/genres/:name", async (req, res) => {
+  try {
+    const movies = await Movie.find({ "genre.name": req.params.name });
+    if (!movies.length) return res.status(404).send("Genre not found");
+    res.json(movies);
+  } catch (err) {
+    res.status(500).send("Error retrieving genre");
+  }
 });
 
-app.post('/users', (req, res) => {
-    res.send('User registration was successful.');
+app.get("/directors/:name", async (req, res) => {
+  try {
+    const movies = await Movie.find({ "director.name": req.params.name });
+    if (!movies.length) return res.status(404).send("Director not found");
+    res.json(movies);
+  } catch (err) {
+    res.status(500).send("Error retrieving director");
+  }
 });
 
-app.put('/users/:username', (req, res) => {
-    res.send(`Successfully updated the username for user: ${req.params.username}.`);
+app.post("/users", async (req, res) => {
+  try {
+    const { username, email, Birthday, favoriteMovies } = req.body;
+    const newUser = new User({ username, email, Birthday, favoriteMovies });
+    await newUser.save();
+    res.status(201).json(newUser);
+  } catch (err) {
+    res.status(500).send("Error registering user");
+  }
 });
 
-app.post('/users/:username/favorites/:movieId', (req, res) => {
-    res.send(`Successfully added movie with ID ${req.params.movieId} to ${req.params.username}'s list of favorites.`);
+app.put("/users/:username", async (req, res) => {
+  try {
+    const updatedUser = await User.findOneAndUpdate(
+      { username: req.params.username },
+      { $set: req.body },
+      { new: true }
+    );
+    if (!updatedUser) return res.status(404).send("User not found");
+    res.json(updatedUser);
+  } catch (err) {
+    res.status(500).send("Error updating user");
+  }
 });
 
-app.delete('/users/:username/favorites/:movieId', (req, res) => {
-    res.send(`Successfully removed movie with ID ${req.params.movieId} from ${req.params.username}'s list of favorites.`);
+app.post("/users/:username/favorites/:movieId", async (req, res) => {
+  try {
+    const user = await User.findOneAndUpdate(
+      { username: req.params.username },
+      { $addToSet: { favoriteMovies: req.params.movieId } },
+      { new: true }
+    );
+    if (!user) return res.status(404).send("User not found");
+    res.json(user);
+  } catch (err) {
+    res.status(500).send("Error adding to favorites");
+  }
 });
 
-app.delete('/users/:username', (req, res) => {
-    res.send(`Successfully deregistered user: ${req.params.username}.`);
+app.delete("/users/:username/favorites/:movieId", async (req, res) => {
+  try {
+    const user = await User.findOneAndUpdate(
+      { username: req.params.username },
+      { $pull: { favoriteMovies: req.params.movieId } },
+      { new: true }
+    );
+    if (!user) return res.status(404).send("User not found");
+    res.json(user);
+  } catch (err) {
+    res.status(500).send("Error removing from favorites");
+  }
+});
+
+app.delete("/users/:username", async (req, res) => {
+  try {
+    const user = await User.findOneAndDelete({ username: req.params.username });
+    if (!user) return res.status(404).send("User not found");
+    res.send("User deregistered");
+  } catch (err) {
+    res.status(500).send("Error deregistering user");
+  }
 });
 
 // Error handler middleware
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something went wrong!');
+  console.error(err.stack);
+  res.status(500).send("Something went wrong!");
 });
 
 // Server listening on port
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
