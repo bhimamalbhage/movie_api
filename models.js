@@ -9,7 +9,9 @@ const movieSchema = new Schema({
   },
   director: {
     name: { type: String, required: true },
-    bio: { type: String }
+    bio: { type: String },
+    birthYear: { type: Number },
+    deathYear: { type: Number }
   },
   year: { type: Number, required: true },
   rating: { type: Number, required: true },

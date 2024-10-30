@@ -55,23 +55,24 @@ app.get("/movies/:name", async (req, res) => {
 
 app.get("/genres/:name", async (req, res) => {
   try {
-    const movies = await Movie.find({ "genre.name": req.params.name });
-    if (!movies.length) return res.status(404).send("Genre not found");
-    res.json(movies);
+    const genre = await Movie.findOne({ "genre.name": req.params.name }, "genre");
+    if (!genre) return res.status(404).send("Genre not found");
+    res.json(genre.genre);
   } catch (err) {
     res.status(500).send("Error retrieving genre");
-  }
+  } 
 });
 
 app.get("/directors/:name", async (req, res) => {
   try {
-    const movies = await Movie.find({ "director.name": req.params.name });
-    if (!movies.length) return res.status(404).send("Director not found");
-    res.json(movies);
+    const director = await Movie.findOne({ "director.name": req.params.name }, "director");
+    if (!director) return res.status(404).send("Director not found");
+    res.json(director.director);
   } catch (err) {
     res.status(500).send("Error retrieving director");
   }
 });
+
 
 app.post("/users", async (req, res) => {
   try {

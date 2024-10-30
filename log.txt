@@ -74,3 +74,11 @@
 ::1 - - [28/Oct/2024:23:37:37 +0000] "POST /users/ragnar/favorites/6713311be633eaba8646876a HTTP/1.1" 200 174
 ::1 - - [28/Oct/2024:23:37:54 +0000] "DELETE /users/ragnar/favorites/6713311be633eaba8646876a HTTP/1.1" 200 148
 ::1 - - [28/Oct/2024:23:38:05 +0000] "DELETE /users/ragnar/ HTTP/1.1" 200 17
+::1 - - [30/Oct/2024:07:04:14 +0000] "GET / HTTP/1.1" 200 25
+::1 - - [30/Oct/2024:07:04:14 +0000] "GET /favicon.ico HTTP/1.1" 404 150
+::1 - - [30/Oct/2024:07:10:45 +0000] "GET / HTTP/1.1" 200 25
+::1 - - [30/Oct/2024:07:11:00 +0000] "GET /genres HTTP/1.1" 404 145
+::1 - - [30/Oct/2024:07:11:07 +0000] "GET /genres/Thriller HTTP/1.1" 200 54
+::1 - - [30/Oct/2024:07:11:14 +0000] "GET /genres/Action HTTP/1.1" 200 63
+::1 - - [30/Oct/2024:07:11:52 +0000] "GET /directors/Ridley%20Scott HTTP/1.1" 200 64
+::1 - - [30/Oct/2024:07:15:26 +0000] "GET /directors/Ridley%20Scott HTTP/1.1" 200 98
