@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const app = express();
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const { Movie, User } = require("./models");
 
 // app.use(morgan('common'));
@@ -12,11 +13,18 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname, "log.txt"), {
   flags: "a",
 });
 
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(morgan("common", { stream: accessLogStream }));
 
 app.use(express.static("public"));
 
 app.use(express.json());
+
+let auth = require('./auth')(app);
+
+const passport = require('passport');
+require('./passport');
 
 mongoose
   .connect("mongodb://localhost:27017/movieDB", {
@@ -30,11 +38,11 @@ mongoose
     console.error("Database connection error:", err);
   });
 
-app.get("/", (req, res) => {
+app.get("/", passport.authenticate('jwt', { session: false }), (req, res) => {
   res.send("Welcome to the Movie API!");
 });
 
-app.get("/movies", async (req, res) => {
+app.get("/movies", passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const movies = await Movie.find();
     res.json(movies);
@@ -43,7 +51,7 @@ app.get("/movies", async (req, res) => {
   }
 });
 
-app.get("/movies/:name", async (req, res) => {
+app.get("/movies/:name",passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const movie = await Movie.findOne({ title: req.params.name });
     if (!movie) return res.status(404).send("Movie not found");
@@ -53,7 +61,7 @@ app.get("/movies/:name", async (req, res) => {
   }
 });
 
-app.get("/genres/:name", async (req, res) => {
+app.get("/genres/:name",passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const genre = await Movie.findOne({ "genre.name": req.params.name }, "genre");
     if (!genre) return res.status(404).send("Genre not found");
@@ -63,7 +71,7 @@ app.get("/genres/:name", async (req, res) => {
   } 
 });
 
-app.get("/directors/:name", async (req, res) => {
+app.get("/directors/:name",passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const director = await Movie.findOne({ "director.name": req.params.name }, "director");
     if (!director) return res.status(404).send("Director not found");
@@ -76,8 +84,8 @@ app.get("/directors/:name", async (req, res) => {
 
 app.post("/users", async (req, res) => {
   try {
-    const { username, email, Birthday, favoriteMovies } = req.body;
-    const newUser = new User({ username, email, Birthday, favoriteMovies });
+    const { username, email, Birthday, favoriteMovies, password } = req.body;
+    const newUser = new User({ username, email, Birthday, favoriteMovies, password });
     await newUser.save();
     res.status(201).json(newUser);
   } catch (err) {
@@ -85,7 +93,7 @@ app.post("/users", async (req, res) => {
   }
 });
 
-app.put("/users/:username", async (req, res) => {
+app.put("/users/:username", passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const updatedUser = await User.findOneAndUpdate(
       { username: req.params.username },
@@ -99,7 +107,7 @@ app.put("/users/:username", async (req, res) => {
   }
 });
 
-app.post("/users/:username/favorites/:movieId", async (req, res) => {
+app.post("/users/:username/favorites/:movieId", passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
       { username: req.params.username },
@@ -113,7 +121,7 @@ app.post("/users/:username/favorites/:movieId", async (req, res) => {
   }
 });
 
-app.delete("/users/:username/favorites/:movieId", async (req, res) => {
+app.delete("/users/:username/favorites/:movieId", passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
       { username: req.params.username },
@@ -127,7 +135,7 @@ app.delete("/users/:username/favorites/:movieId", async (req, res) => {
   }
 });
 
-app.delete("/users/:username", async (req, res) => {
+app.delete("/users/:username", passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const user = await User.findOneAndDelete({ username: req.params.username });
     if (!user) return res.status(404).send("User not found");
