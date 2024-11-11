@@ -116,3 +116,11 @@
 ::1 - - [06/Nov/2024:06:26:00 +0000] "POST /users/newuser/favorites/6713311be633eaba8646876a HTTP/1.1" 200 201
 ::1 - - [06/Nov/2024:06:26:32 +0000] "DELETE /users/newuser/favorites/6713311be633eaba8646876a HTTP/1.1" 200 175
 ::1 - - [06/Nov/2024:06:26:44 +0000] "DELETE /users/newuser HTTP/1.1" 200 17
+::1 - - [11/Nov/2024:08:13:20 +0000] "GET /users/ HTTP/1.1" 404 145
+::1 - - [11/Nov/2024:08:13:34 +0000] "GET / HTTP/1.1" 200 25
+::1 - - [11/Nov/2024:08:13:43 +0000] "GET /movies HTTP/1.1" 200 3812
+::1 - - [11/Nov/2024:08:15:52 +0000] "POST /users HTTP/1.1" 500 21
+::1 - - [11/Nov/2024:08:18:36 +0000] "POST /users HTTP/1.1" 500 43
+::1 - - [11/Nov/2024:08:19:04 +0000] "POST /users HTTP/1.1" 201 227
+::1 - - [11/Nov/2024:08:20:05 +0000] "POST /users HTTP/1.1" 422 133
+::1 - - [11/Nov/2024:08:20:14 +0000] "POST /users HTTP/1.1" 422 133
