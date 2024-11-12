@@ -46,6 +46,8 @@ mongoose
   .connect(process.env.CONNECTION_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    connectTimeoutMS: 20000,
+    serverSelectionTimeoutMS: 20000
   })
   .then(() => {
     console.log("Database connected");
