@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const { Movie, User } = require("./models");
 const cors = require("cors");
 const { check, validationResult } = require("express-validator");
+require('dotenv').config();
 
 // app.use(morgan('common'));
 
@@ -49,8 +50,17 @@ mongoose
     connectTimeoutMS: 20000,
     serverSelectionTimeoutMS: 20000
   })
-  .then(() => {
+  .then(async () => {
     console.log("Database connected");
+
+    try {
+      const movies = await Movie.find(); // Fetch all movies
+      console.log(movies);
+    } catch (error) {
+      console.error("Error retrieving movies:", error);
+    } finally {
+      mongoose.disconnect();
+    }
   })
   .catch((err) => {
     console.error("Database connection error:", err);
@@ -245,7 +255,7 @@ app.use((err, req, res, next) => {
 });
 
 // Server listening on port
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 app.listen(port, '0.0.0.0',() => {
  console.log('Listening on Port ' + port);
 });
