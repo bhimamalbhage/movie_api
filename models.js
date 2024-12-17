@@ -17,8 +17,9 @@ const movieSchema = new Schema({
   year: { type: Number, required: true },
   rating: { type: Number, required: true },
   cast: [{ type: String }],
-  duration: { type: Number, required: true }
-});
+  duration: { type: Number, required: true },
+},
+);
 
 const userSchema = new Schema({
   username: { type: String, required: true, unique: true },
