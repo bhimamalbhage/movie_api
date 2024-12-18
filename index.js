@@ -52,15 +52,6 @@ mongoose
   })
   .then(async () => {
     console.log("Database connected");
-
-    try {
-      const movies = await Movie.find(); // Fetch all movies
-      console.log(movies);
-    } catch (error) {
-      console.error("Error retrieving movies:", error);
-    } finally {
-      mongoose.disconnect();
-    }
   })
   .catch((err) => {
     console.error("Database connection error:", err);
